@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WELLTRACK – Smart Student Wellness Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  
+  <div id="auth-screen" class="auth-screen">
+    <div class="auth-brand">
+      <div class="brand-mark">W</div>
+      <h1 class="brand-name">WELLTRACK</h1>
+      <p class="brand-tagline">Smart Student Wellness & Productivity</p>
+    </div>
+
+    
+    <div id="login-panel" class="auth-card">
+      <h2 class="auth-title">Welcome back</h2>
+      <p class="auth-sub">Sign in to your wellness dashboard</p>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="you@university.edu" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" />
+      </div>
+      <div id="login-error" class="form-error hidden"></div>
+      <button class="btn-primary" onclick="handleLogin()">Sign In</button>
+      <p class="auth-switch">New here? <a href="#" onclick="showRegister()">Create account →</a></p>
+    </div>
+
+  
+    <div id="register-panel" class="auth-card hidden">
+      <h2 class="auth-title">Join WELLTRACK</h2>
+      <p class="auth-sub">Start your wellness journey today</p>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="reg-name" placeholder="Your name" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="reg-email" placeholder="you@university.edu" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="reg-password" placeholder="Min. 6 characters" />
+      </div>
+      <div id="reg-error" class="form-error hidden"></div>
+      <button class="btn-primary" onclick="handleRegister()">Create Account</button>
+      <p class="auth-switch">Already have an account? <a href="#" onclick="showLogin()">Sign in →</a></p>
+    </div>
+  </div>
+
+  
+  <div id="app-shell" class="app-shell hidden">
+
+
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-mark small">W</div>
+        <span class="sidebar-brand">WELLTRACK</span>
+        <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+      </div>
+      <ul class="nav-list">
+        <li><a href="#" class="nav-item active" onclick="showSection('dashboard', this)"><span class="nav-icon">⊞</span> Dashboard</a></li>
+        <li><a href="#" class="nav-item" onclick="showSection('log', this)"><span class="nav-icon">✏</span> Daily Log</a></li>
+        <li><a href="#" class="nav-item" onclick="showSection('mood', this)"><span class="nav-icon">◕</span> Mood History</a></li>
+        <li><a href="#" class="nav-item" onclick="showSection('streaks', this)"><span class="nav-icon">🔥</span> Habit Streaks</a></li>
+        <li><a href="#" class="nav-item" onclick="showSection('weekly', this)"><span class="nav-icon">▦</span> Weekly Summary</a></li>
+        <li><a href="#" class="nav-item" onclick="showSection('alerts', this)"><span class="nav-icon">◉</span> Alerts</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="user-avatar">S</div>
+          <div>
+            <div class="user-name" id="user-name-sidebar">Student</div>
+            <div class="user-email-sm" id="user-email-sidebar">—</div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="logout()">Sign Out</button>
+      </div>
+    </nav>
+
+    <!-- Main Area -->
+    <div class="main-area">
+      <header class="topbar">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title" id="topbar-title">Dashboard</div>
+        <div class="topbar-date" id="topbar-date"></div>
+      </header>
+
+      <main class="content-area">
+
+        <!-- ── DASHBOARD ── -->
+        <section id="section-dashboard" class="section active">
+          <!-- Notifications banner -->
+          <div id="alert-banner" class="alert-banner hidden"></div>
+
+          <!-- Smart Score + Productivity Row -->
+          <div class="grid-2-1">
+            <!-- Smart Score Card -->
+            <div class="card score-card" id="smart-score-card">
+              <div class="card-label">WELLTRACK Smart Score</div>
+              <div class="score-display">
+                <div class="score-ring-wrap">
+                  <svg class="score-ring" viewBox="0 0 120 120">
+                    <circle class="ring-bg" cx="60" cy="60" r="50"/>
+                    <circle class="ring-fill" id="ring-fill" cx="60" cy="60" r="50"
+                      stroke-dasharray="314"
+                      stroke-dashoffset="314"
+                      transform="rotate(-90 60 60)"/>
+                  </svg>
+                  <div class="score-number-wrap">
+                    <span class="score-number" id="smart-score-num">--</span>
+                    <span class="score-denom">/100</span>
+                  </div>
+                </div>
+                <div class="score-meta">
+                  <div class="score-grade" id="score-grade">No log yet</div>
+                  <div class="score-breakdown" id="score-breakdown"></div>
+                  <div class="score-bar-wrap">
+                    <div class="score-bar-bg">
+                      <div class="score-bar-fill" id="score-bar-fill" style="width:0%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Productivity Score -->
+            <div class="card prod-card">
+              <div class="card-label">Productivity Score</div>
+              <div class="prod-score-num" id="prod-score-num">--</div>
+              <div class="prod-bar-wrap">
+                <div class="prod-bar-bg">
+                  <div class="prod-bar-fill" id="prod-bar-fill" style="width:0%"></div>
+                </div>
+                <span class="prod-bar-label" id="prod-bar-label">—</span>
+              </div>
+              <div class="prod-factors" id="prod-factors"></div>
+            </div>
+          </div>
+
+          <!-- Mood + Streak Row -->
+          <div class="grid-2">
+            <!-- Today's Mood -->
+            <div class="card">
+              <div class="card-label">Today's Mood</div>
+              <div class="today-mood" id="today-mood-display">
+                <span class="mood-big">—</span>
+                <span class="mood-label-big">No log yet</span>
+              </div>
+            </div>
+
+            <!-- Quick Streaks -->
+            <div class="card">
+              <div class="card-label">Active Streaks</div>
+              <div class="streak-mini" id="streak-mini"></div>
+            </div>
+          </div>
+
+          <!-- Recent Logs -->
+          <div class="card">
+            <div class="card-label">Recent Daily Logs</div>
+            <div class="table-wrap">
+              <table class="data-table" id="recent-logs-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Sleep</th>
+                    <th>Study</th>
+                    <th>Screen</th>
+                    <th>Exercise</th>
+                    <th>Stress</th>
+                    <th>Mood</th>
+                    <th>Score</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-logs-body">
+                  <tr><td colspan="8" class="empty-row">No logs yet. Start tracking!</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── DAILY LOG FORM ── -->
+        <section id="section-log" class="section hidden">
+          <div class="card log-card">
+            <div class="card-label">Daily Wellness Log</div>
+            <p class="log-subtitle">How was your day? Log your habits below.</p>
+
+            <div class="log-date-row">
+              <label>Date</label>
+              <input type="date" id="log-date" />
+            </div>
+
+            <div class="log-grid">
+              <div class="form-group">
+                <label>😴 Sleep Hours</label>
+                <input type="number" id="log-sleep" min="0" max="24" step="0.5" placeholder="e.g. 7.5" />
+              </div>
+              <div class="form-group">
+                <label>📚 Study/Work Hours</label>
+                <input type="number" id="log-study" min="0" max="24" step="0.5" placeholder="e.g. 5" />
+              </div>
+              <div class="form-group">
+                <label>📱 Screen Time (hrs)</label>
+                <input type="number" id="log-screen" min="0" max="24" step="0.5" placeholder="e.g. 3" />
+              </div>
+              <div class="form-group">
+                <label>🏃 Exercise (minutes)</label>
+                <input type="number" id="log-exercise" min="0" max="300" step="5" placeholder="e.g. 30" />
+              </div>
+              <div class="form-group">
+                <label>🔥 Stress Level</label>
+                <select id="log-stress">
+                  <option value="">Select…</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>🎯 Focus Level</label>
+                <select id="log-focus">
+                  <option value="">Select…</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mood-picker">
+              <label class="mood-picker-label">How are you feeling?</label>
+              <div class="mood-options">
+                <button class="mood-btn" data-mood="Happy" onclick="selectMood(this)">😀<span>Happy</span></button>
+                <button class="mood-btn" data-mood="Neutral" onclick="selectMood(this)">😐<span>Neutral</span></button>
+                <button class="mood-btn" data-mood="Tired" onclick="selectMood(this)">😴<span>Tired</span></button>
+                <button class="mood-btn" data-mood="Stressed" onclick="selectMood(this)">😣<span>Stressed</span></button>
+              </div>
+            </div>
+
+            <div id="log-error" class="form-error hidden"></div>
+            <div id="log-success" class="form-success hidden"></div>
+            <button class="btn-primary" onclick="saveLog()">Save Today's Log ✓</button>
+          </div>
+        </section>
+
+        <!-- ── MOOD HISTORY ── -->
+        <section id="section-mood" class="section hidden">
+          <div class="card">
+            <div class="card-label">Mood History</div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Date</th><th>Mood</th><th>Stress</th><th>Focus</th></tr>
+                </thead>
+                <tbody id="mood-history-body">
+                  <tr><td colspan="4" class="empty-row">No mood logs yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── HABIT STREAKS ── -->
+        <section id="section-streaks" class="section hidden">
+          <div class="card">
+            <div class="card-label">Habit Streaks</div>
+            <p class="log-subtitle">Consecutive days of healthy habits — keep the chain alive!</p>
+            <div class="streaks-grid" id="streaks-grid"></div>
+          </div>
+        </section>
+
+        <!-- ── WEEKLY SUMMARY ── -->
+        <section id="section-weekly" class="section hidden">
+          <div class="card weekly-card">
+            <div class="card-label">Weekly Wellness Summary</div>
+            <div id="weekly-content"></div>
+          </div>
+        </section>
+
+        <!-- ── ALERTS ── -->
+        <section id="section-alerts" class="section hidden">
+          <div class="card">
+            <div class="card-label">Health Alerts & Notifications</div>
+            <div id="alerts-list"></div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast-container"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
